@@ -1,0 +1,111 @@
+<!-- Modal -->
+<div class="modal fade" id="staticmodal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticmodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" id="buttoncloseX" class="btn-close close p-1" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bi bi-x-square-fill"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="col m-1 my-3">
+                <input type="text" class="form-control products-control mt-3" id="brand" placeholder="Brand">
+                <input type="text" class="form-control products-control mt-3" id="itemname" placeholder="Item Name">
+                <input type="number" class="form-control products-control mt-3" id="quantity" placeholder="Quantity">
+                <input type="number" class="form-control products-control mt-3" id="price" placeholder="Price">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="col m-1 my-3">
+                <textarea class="form-control products-control mt-3" placeholder="Description" id="description"
+                  style="height: 183px"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn updatebtn">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="content-content">
+      Products
+    </h3>
+    <!-- Button trigger modal -->
+    <div class="row justify-content-end">
+      <div class="col-6">
+        <input type="text" class="w-50" id="search" placeholder="Search for...">
+      </div>
+      <div class="col-6 pl-5 text-right">
+        <button type="button" id="addbtn" class="btn addbtn" data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop">
+          + ADD
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table table-light table-striped table-hover">
+      <thead class="table-content">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Brand</th>
+          <th scope="col">Item Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Brand">Mark</td>
+          <td data-label="Item Name">Otto</td>
+          <td data-label="Description">@mdo</td>
+          <td data-label="Quantity">Otto</td>
+          <td data-label="Price">@mdo</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Brand">Mark</td>
+          <td data-label="Item Name">Otto</td>
+          <td data-label="Description">@mdo</td>
+          <td data-label="Quantity">Otto</td>
+          <td data-label="Price">@mdo</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Brand">Mark</td>
+          <td data-label="Item Name">Otto</td>
+          <td data-label="Description">@mdo</td>
+          <td data-label="Quantity">Otto</td>
+          <td data-label="Price">@mdo</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Brand">Mark</td>
+          <td data-label="Item Name">Otto</td>
+          <td data-label="Description">@mdo</td>
+          <td data-label="Quantity">Otto</td>
+          <td data-label="Price">@mdo</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Brand">Mark</td>
+          <td data-label="Item Name">Otto</td>
+          <td data-label="Description">@mdo</td>
+          <td data-label="Quantity">Otto</td>
+          <td data-label="Price">@mdo</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
