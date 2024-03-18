@@ -1,0 +1,85 @@
+<!-- Modal -->
+<div class="modal fade" id="staticmodal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticmodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" id="buttoncloseX" class="btn-close close p-1" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bi bi-x-square-fill"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <textarea class="form-control products-control w-100" placeholder="Message" id="message"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn updatebtn">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="content-content">
+      Conversation
+    </h3>
+    <!-- Button trigger modal -->
+
+    <div class="row justify-content-end">
+      <div class="col-6">
+        <input type="text" class="w-50" id="search" placeholder="Search for...">
+      </div>
+      <div class="col-6 pl-5 text-right">
+        <button type="button" id="addbtn" class="btn addbtn" data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop">
+          + ADD
+        </button>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="card-body content-card-body">
+
+    <table class="table table-light table-striped table-hover">
+      <thead class="table-content contents">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Customer ID</th>
+          <th scope="col">Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Customer ID">Mark</td>
+          <td data-label="Message">Otto</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Customer ID">Mark</td>
+          <td data-label="Message">Otto</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Customer ID">Mark</td>
+          <td data-label="Message">Otto</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Customer ID">Mark</td>
+          <td data-label="Message">Otto</td>
+        </tr>
+        <tr>
+          <td data-label="ID">1</td>
+          <td data-label="Customer ID">Mark</td>
+          <td data-label="Message">Otto</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
