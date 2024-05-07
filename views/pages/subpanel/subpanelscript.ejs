@@ -1,16 +1,209 @@
 <script>
-    $(document).on("click", "#addbtn", function(){
-        // console.log("triggered")
-        $("#staticmodal").modal("show");
-    })
+    $(document).ready(function () {
+        handleDeleteButtonClick();
+        LoadTable();
+        let subpanelId = '';
+        $("#datatable").on('click', '.status-btn', function () {
+            var rowData = $(this).closest('tr').find('td').map(function () {
+                return $(this).text();
+            }).get();
+            var statusCell = $(this).closest('tr').find('td:eq(3)');
+            var status = statusCell.text();
+            var newStatus = status === "Active" ? "Inactive" : "Active";
+            statusCell.text(newStatus);
 
-    $(document).on("click", "#buttonclose", function(){
-        // console.log("triggered")
-        $("#staticmodal").modal("hide");
-    })
+            var icon = newStatus === "Active" ? "fas fa-eye" : "far fa-eye-slash";
+            $(this).find('i').removeClass().addClass(icon);
+        });
+        $("#datatable").on('click', 'tr', function(){
+            var dataRow = [];
+            $(this).closest('tr').find('td').each(function(){
+                dataRow.push($(this).text());
+            });
+            console.log(dataRow)
+            subpanelId = dataRow[0];
+            console.log("Clicked subpanelId:", subpanelId)
+        });
 
-    $(document).on("click", "#buttoncloseX", function(){
-        // console.log("triggered")
-        $("#staticmodal").modal("hide");
-    })
+        function LoadTable() {
+            console.log("init complete");
+
+            $("#datatable").DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                paging: false,
+                searching: false,
+                info: false,
+                scrollY: 400,
+                scrollCollapse: true,
+                serverMethod: "GET",
+                ajax: {
+                    url: "/subpanel/load",
+                    dataSrc: (json) => {
+                        var finalData = [];
+                        var data = json.data;
+                        console.log(data);
+                        $.each(data, (key, item) => {
+                            finalData.push({
+                                s_id: item.s_id,
+                                s_panelid: item.s_panelid,
+                                s_name: item.s_name,
+                                s_status: item.s_status,
+                                s_createdby: item.s_createdBy,
+                                s_createdDate: new Date(item.s_createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                                action: `
+                                    <button class="edit-btn" data-id="${item.s_id}" data-toggle="modal" data-target="#staticmodalupdate">
+                                    <i class="fas fa-edit"></i>
+                                    </button>
+
+
+                                    <button class="delete-btn" data-id="${item.s_id}">
+                                    <i class="fas fa-trash-alt"></i> 
+                                    </button>
+                                    <button class="status-btn">
+                                    <i class="fas fa-eye"></i>
+                                    </button>
+                                `,
+                            });
+
+
+                        });
+
+                        return finalData;
+                    },
+                },
+                columnDefs: [
+                    {
+                        targets: 1,
+                        className: "td-indent",
+                    },
+                ],
+                columns: [
+                    { data: "s_id" },
+                    { data: "s_panelid" },
+                    { data: "s_name" },
+                    { data: "s_status" },
+                    { data: "s_createdby" },
+                    { data: "s_createdDate" },
+                    { data: "action" },
+                ],
+                initComplete: function () {
+                    console.log("Hit");
+                    // hideload();
+                },
+            });
+        }
+
+       
+        $("#save-button").on("click", function () {
+                console.log("Save button clicked");
+
+                let s_panelid = $("#panelid").val();
+                let s_name = $("#name").val();
+                let s_status = "Active";
+                let s_createdBy = "Admin"; 
+                let s_createdDate = new Date().toISOString(); 
+
+
+
+                console.log("Form data:", {
+                        s_panelid: s_panelid,
+                        s_name: s_name,
+                        s_status: s_status,
+                        s_createdBy: s_createdBy,
+                        s_createdDate: s_createdDate
+                    });
+
+
+                $.ajax({
+                    url: "/subpanel/save",
+                    method: "POST",
+                    data: {
+                        s_panelid: s_panelid, 
+                        s_name: s_name,
+                        s_status: s_status,
+                        s_createdBy: s_createdBy,
+                        s_createdDate: s_createdDate
+                    },
+                    success: function (response) {
+                        if (response && response.msg === "success") {
+                            $("#panelid").val("");
+                            $("#name").val("");
+
+                            $("#staticmodal").modal("hide");
+                            $('#datatable').DataTable().ajax.reload();
+                            Swal.fire({
+                                position: "top-center",
+                                icon: "success",
+                                title: "Data Saved successfully!",
+                                message: "Sample Message",
+                                showConfirmButton: true,
+                                timer: 1500
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error saving data. Please try again.',
+                            });
+                        }
+                    }
+                });
+            });
+        
+        function handleDeleteButtonClick() {
+            $('#datatable').on('click', '.delete-btn', function () {
+                var subpanelId = $(this).data('id');
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: '/subpanel/delete/' + subpanelId,
+                            method: 'DELETE',
+                            success: function (response) {
+                                if (response && response.msg === 'success') {
+                                    $('#datatable').DataTable().ajax.reload();
+                                    Swal.fire("Deleted Successfully!", "", "success");
+                                } else {
+                                    alert('Error deleting user. Please try again.');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error deleting user:', error);
+                                alert('Error deleting user. Please try again.');
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        handleDeleteButtonClick();
+
+        $(document).on("click", "#addbtn", function(){
+            // console.log("triggered")
+            $("#staticmodal").modal("show");
+        })
+
+        $(document).on("click", "#buttonclose", function(){
+            // console.log("triggered")
+            $("#staticmodal").modal("hide");
+        })
+
+        $(document).on("click", "#buttoncloseX", function(){
+            // console.log("triggered")
+            $("#staticmodal").modal("hide");
+        })
+    });
 </script>
