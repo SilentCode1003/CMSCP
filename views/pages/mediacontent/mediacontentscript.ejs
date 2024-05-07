@@ -1,16 +1,64 @@
 <script>
-    $(document).on("click", "#addbtn", function(){
+    loadDataTable();
+    
+    $(document).on("click", "#addbtn", function () {
         // console.log("triggered")
         $("#staticmodal").modal("show");
     })
 
-    $(document).on("click", "#buttonclose", function(){
+    $(document).on("click", "#buttonclose", function () {
         // console.log("triggered")
         $("#staticmodal").modal("hide");
     })
 
-    $(document).on("click", "#buttoncloseX", function(){
+    $(document).on("click", "#buttoncloseX", function () {
         // console.log("triggered")
         $("#staticmodal").modal("hide");
     })
+    
+    function displayData(data){
+        const tableBody = $("#sample-table tbody");
+        tableBody.empty();
+
+        if (data.length != 0){
+            data.forEach((row) => {
+                const {ID, fullname, username, accessType, status, createdBy, createdDate } = row;
+                const action = `<button class="btn btn-outline-primary" id="edit-btn">Edit</button>`
+
+                const tr = $('<tr>').append(
+                    $('<td>', { text: ID}),
+                    $('<td>', { text: fullname}),
+                    $('<td>', { text: username}),
+                    $('<td>', { text: accessType}),
+                    $('<td>', { text: status}),
+                    $('<td>', { text: createdBy}),
+                    $('<td>', { text: createdDate}),
+                    $('<td>', { html: action}),
+                );
+
+                tableBody.append(tr);
+            })
+        }else{
+            info("No Data", "Please pass a data to display the table. Thank you UwU <3 :3");
+        }
+    }
+
+    function info(title, message){
+        Swal.fire({
+            title: `${title}`,
+            text: `${message}`,
+            icon: "question"
+        });
+    }
+
+    function loadDataTable() {
+        $.ajax({
+            url: "/mediacontent/load",
+            method: "GET",
+            success: function (result) {
+                let data = result.data;
+                displayData(data);
+            }
+        });
+    }
 </script>

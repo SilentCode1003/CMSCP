@@ -14,9 +14,9 @@
           <div class="col-md-6 m-1 my-3">
             <select class="form-select products-control" id="panelid" aria-label="Default select example">
               <option selected>Panel ID</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
+              <option value="1000">1000</option>
+              <option value="1001">1001</option>
+              <option value="1002">1002</option>
             </select>
           </div>
 
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn updatebtn">Update</button>
+      <button type="button" class="btn updatebtn" id="save-button" name="save-button">Save</button>
     </div>
   </div>
 </div>
@@ -57,7 +57,7 @@
     </div>
     <div class="card-body">
 
-      <table class="table table-light table-striped table-hover">
+      <table class="table table-light table-striped table-hover" name="datatable" id="datatable">
         <thead class="table-content contents">
           <tr>
             <th scope="col">ID</th>
@@ -66,49 +66,11 @@
             <th scope="col">Status</th>
             <th scope="col">Created By</th>
             <th scope="col">Created Date</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td data-label="ID">1</td>
-            <td data-label="Panel ID">Mark</td>
-            <td data-label="Name">Otto</td>
-            <td data-label="Status">Otto</td>
-            <td data-label="Created By">@mdo</td>
-            <td data-label="Created Date">Otto</td>
-          </tr>
-          <tr>
-            <td data-label="ID">1</td>
-            <td data-label="Panel ID">Mark</td>
-            <td data-label="Name">Otto</td>
-            <td data-label="Status">Otto</td>
-            <td data-label="Created By">@mdo</td>
-            <td data-label="Created Date">Otto</td>
-          </tr>
-          <tr>
-            <td data-label="ID">1</td>
-            <td data-label="Panel ID">Mark</td>
-            <td data-label="Name">Otto</td>
-            <td data-label="Status">Otto</td>
-            <td data-label="Created By">@mdo</td>
-            <td data-label="Created Date">Otto</td>
-          </tr>
-          <tr>
-            <td data-label="ID">1</td>
-            <td data-label="Panel ID">Mark</td>
-            <td data-label="Name">Otto</td>
-            <td data-label="Status">Otto</td>
-            <td data-label="Created By">@mdo</td>
-            <td data-label="Created Date">Otto</td>
-          </tr>
-          <tr>
-            <td data-label="ID">1</td>
-            <td data-label="Panel ID">Mark</td>
-            <td data-label="Name">Otto</td>
-            <td data-label="Status">Otto</td>
-            <td data-label="Created By">@mdo</td>
-            <td data-label="Created Date">Otto</td>
-          </tr>
+          
         </tbody>
       </table>
     </div>

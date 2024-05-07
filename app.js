@@ -1,37 +1,44 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const createError = require('http-errors');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var contentRouter = require('./routes/content');
-var mediacontentRouter = require('./routes/mediacontent');
-var userRouter = require('./routes/user');
-var categoryRouter = require('./routes/category');
-var subcategoryRouter = require('./routes/subcategory');
-var panelRouter = require('./routes/panel');
-var subpanelRouter = require('./routes/subpanel');
-var customerRouter = require('./routes/customer');
-var conversationRouter = require('./routes/conversation');
-var orderRouter = require('./routes/order');
-var orderitemRouter = require('./routes/orderitem');
-var orderhistoryRouter = require('./routes/orderhistory');
-var productsRouter = require('./routes/products');
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-var app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// Set view engine
 app.set('view engine', 'ejs');
 
+
+// Import routes
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const contentRouter = require('./routes/content');
+const mediacontentRouter = require('./routes/mediacontent');
+const userRouter = require('./routes/user');
+const categoryRouter = require('./routes/category');
+const subcategoryRouter = require('./routes/subcategory');
+const panelRouter = require('./routes/panel');
+const subpanelRouter = require('./routes/subpanel');
+const customerRouter = require('./routes/customer');
+const conversationRouter = require('./routes/conversation');
+const orderRouter = require('./routes/order');
+const orderitemRouter = require('./routes/orderitem');
+const orderhistoryRouter = require('./routes/orderhistory');
+const productsRouter = require('./routes/products');
+
+// Middleware
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/content', contentRouter);
@@ -48,21 +55,21 @@ app.use('/orderitem', orderitemRouter);
 app.use('/orderhistory', orderhistoryRouter);
 app.use('/products', productsRouter);
 
-
-// catch 404 and forward to error handler
+// Error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;

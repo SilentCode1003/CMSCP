@@ -1,4 +1,116 @@
 <script>
+    $(document).ready(function () {
+    loadDataTable();
+    // function displayData(data){
+    //     const tableBody = $("#DataTable tbody");
+    //     tableBody.empty();
+
+    //     if (data.length != 0){
+    //         data.forEach((row) => {
+    //             const {cs_id, cs_firstname, cs_middlename, cs_lastname, cs_contactno, cs_address, cs_email, cs_username, cs_password,cs_createdby,cs_createdDate,cs_status} = row;
+    //             const action = `<button class="btn btn-outline-primary" id="edit-btn">Edit</button>`
+
+    //             const tr = $('<tr>').append(
+    //                 $('<td>', { text: cs_id}),
+    //                 $('<td>', { text: cs_firstname}),
+    //                 $('<td>', { text: cs_middlename}),
+    //                 $('<td>', { text: cs_lastname}),
+    //                 $('<td>', { text: cs_contactno}),
+    //                 $('<td>', { text: cs_address}),
+    //                 $('<td>', { text: cs_email}),
+    //                 $('<td>', { text: cs_username}),
+    //                 $('<td>', { text: cs_password}),
+    //                 $('<td>', { text: cs_createdby}),
+    //                 $('<td>', { text: cs_createdDate}),
+    //                 $('<td>', { text: cs_status}),
+    //                 $('<td>', { html: action}),
+    //             );
+
+    //             tableBody.append(tr);
+    //         })
+    //     }else{
+    //         info("No Data", "walang data pre!!");
+    //     }
+    // }
+   
+    function loadDataTable() {
+        $("#datatable").DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                paging: false,
+                searching: false,
+                info: false,
+                scrollY: 400,
+                scrollCollapse: true,
+                serverMethod: "GET",
+                ajax: {
+                    url: "/customer/load",
+                    dataSrc: (json) => {
+                        var finalData = [];
+                        var data = json.data;
+                        console.log(data);
+                        $.each(data, (key, item) => {
+                        finalData.push({
+                          cs_id: item.cs_id,
+                          cs_firstname: item.cs_firstname,
+                          cs_middlename: item.cs_middlename,
+                          cs_lastname: item.cs_lastname,
+                          cs_contactno: item.cs_contactno,
+                          cs_address: item.cs_address,
+                          cs_email: item.cs_email,
+                          cs_username: item.cs_username,
+                          cs_password: item.cs_password,
+                          cs_createdby: item.cs_createdby,
+                          cs_createddate: new Date(item.cs_createddate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                          cs_status: item.cs_status,
+                          action: `
+                              <button class="edit-btn" data-id="${item.cs_id}" data-toggle="modal" data-target="#staticmodalupdate">
+                                  <i class="fas fa-edit"></i>
+                              </button>
+                              <button class="delete-btn" data-id="${item.cs_id}">
+                                  <i class="fas fa-trash-alt"></i> 
+                              </button>
+                              <button class="status-btn">
+                                  <i class="fas fa-eye"></i>
+                              </button>
+                          `,
+                      });
+                        });
+                        return finalData;
+                    },
+                },
+                columnDefs: [
+                    {
+                        targets: 1,
+                        className: "td-indent",
+                    },
+                ],
+                columns: [
+                    { data: "cs_id" },
+                    { data: "cs_firstname" },
+                    { data: "cs_middlename" },
+                    { data: "cs_lastname" },
+                    { data: "cs_contactno" },
+                    { data: "cs_address" },
+                    { data: "cs_email" },
+                    { data: "cs_username" },
+                    { data: "cs_password" },
+                    { data: "cs_createdby" },
+                    { data: "cs_createddate" },
+                    { data: "cs_status" },
+                    { data: "action" },
+                ],
+                initComplete: function () {
+                     console.log("init complete");
+                    // hideload();
+                },
+            });
+
+        }
+
+    });
+
     $(document).on("click", "#addbtn", function(){
         // console.log("triggered")
         $("#staticmodal").modal("show");

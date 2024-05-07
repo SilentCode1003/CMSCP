@@ -9,9 +9,28 @@
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
-  }
+    "i": "^0.3.7",
+    "mongoose": "^8.2.3",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.3",
+    "sweetalert2": "^11.6.13",
+    "toastr": "^2.1.4"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilentCode1003/CMSCP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SilentCode1003/CMSCP/issues"
+  },
+  "homepage": "https://github.com/SilentCode1003/CMSCP#readme",
+  "keywords": [],
+  "description": ""
 }

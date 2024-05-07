@@ -1,10 +1,9 @@
+
 <!-- Modal -->
-<div class="modal fade" id="staticmodal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticmodalLabel" aria-hidden="true">
+<div class="modal fade" id="staticmodal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticmodalLabel" aria-hidden="true">
   <div class="modal-dialog ">
     <div class="modal-content">
       <div class="modal-header modalheader">
-
         <button type="button" id="buttoncloseX" class="btn-close close p-1" data-bs-dismiss="modal" aria-label="Close">
           <i class="bi bi-x-square-fill"></i>
         </button>
@@ -12,50 +11,76 @@
       <div class="modal-body user-body">
         <div class="row">
           <div class="col-md-6 mb-2">
-            <input type="text" class="form-control products-control" id="fullname" placeholder="Fullname">
-            <input type="text" class="form-control products-control mt-3" id="username" placeholder="Username">
+            <input type="text" class="form-control products-control" id="fullname" name="fullname"placeholder="Fullname">
+            <input type="hidden" id=fullname">
+            <input type="text" class="form-control products-control mt-3" id="username"  name="username" placeholder="Username">
           </div>
           <div class="col-md-6">
-            <input type="password" class="form-control products-control" id="password" placeholder="Password">
-            <select class="form-select products-control  mt-3" aria-label="Default select example">
+            <input type="password" class="form-control products-control" id="password" name="password" placeholder="Password">
+            <select class="form-select products-control  mt-3" aria-label="Default select example" id="accesstype" name="accesstype">
               <option selected>Access Type</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
+              <option value="10003">1</option>
+              <option value="20003">2</option>
+              <option value="30003">3</option>
             </select>
           </div>
         </div>
-      </div>
+    </div>
+    
       <div class="modal-footer">
-        <button type="button" class="btn updatebtn">Update</button>
+        <button type="button" class="btn updatebtn" name='save-button' id="save-button">Save</button>
       </div>
     </div>
   </div>
-</div>
+</div> 
+<div class="modal fade" id="staticmodalupdate" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticmodalLabel" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header modalheader">
+        <button type="button" id="buttoncloseX" class="btn-close close p-1" data-bs-dismiss="modal" aria-label="Close">
+          <i class="bi bi-x-square-fill"></i>
+        </button>
+      </div>
+      <div class="modal-body user-body">
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <input type="text" class="form-control products-control" id="fullnameupd" name="fullname"placeholder="Fullname">
+            
+            <input type="text" class="form-control products-control mt-3" id="usernameupd"  name="username" placeholder="Username">
+          </div>
+          <div class="col-md-6">
+            <input type="password" class="form-control products-control" id="passwordupd" name="password" placeholder="Password">
+            <select class="form-select products-control  mt-3" aria-label="Default select example" id="accesstypeupd" name="accesstype">
+              <option selected>Access Type</option>
+              <option value="10003">1</option>
+              <option value="20003">2</option>
+              <option value="30003">3</option>
+            </select>
+          </div>
+        </div>
+    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn updatebtn" name='update-button' id="update-button">Update</button>
+      </div>
+    </div>
+  </div>
+</div> 
 <div class="card">
   <div class="card-header">
-    <h3 class="content-content">
-      User
-    </h3>
-    <!-- Button trigger modal -->
-
+    <h3 class="content-content">User</h3>
     <div class="row justify-content-end">
       <div class="col-6">
-        <input type="text" class="w-50" id="searh" placeholder="Search for...">
+        <input type="text" class="w-50" id="search" placeholder="Search for...">
       </div>
       <div class="col-6 pl-5 text-right">
-        <button type="button" id="addbtn" class="btn addbtn" data-bs-toggle="modal"
-          data-bs-target="#staticBackdrop">
+        <button type="button" id="addbtn" class="btn addbtn" data-bs-toggle="modal" data-bs-target="#staticmodal">
           + ADD
         </button>
-
-
       </div>
     </div>
   </div>
   <div class="card-body">
-
-    <table class="table table-light table-striped table-hover">
+    <table class="table table-light table-striped table-hover" id="datatable" name="datatable">
       <thead class="table-content contents">
         <tr>
           <th scope="col">ID</th>
@@ -66,60 +91,12 @@
           <th scope="col">Status</th>
           <th scope="col">Created By</th>
           <th scope="col">Created Date</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td data-label="ID">1</td>
-          <td data-label="Fullname">Mark</td>
-          <td data-label="Username">Otto</td>
-          <td data-label="Password">Otto</td>
-          <td data-label="Access Type">Otto</td>
-          <td data-label="Status">Otto</td>
-          <td data-label="Created By">@mdo</td>
-          <td data-label="Created Date">Otto</td>
-        </tr>
-        <tr>
-          <td data-label="ID">1</td>
-          <td data-label="Fullname">Mark</td>
-          <td data-label="Username">Otto</td>
-          <td data-label="Password">Otto</td>
-          <td data-label="Access Type">Otto</td>
-          <td data-label="Status">Otto</td>
-          <td data-label="Created By">@mdo</td>
-          <td data-label="Created Date">Otto</td>
-        </tr>
-        <tr>
-          <td data-label="ID">1</td>
-          <td data-label="Fullname">Mark</td>
-          <td data-label="Username">Otto</td>
-          <td data-label="Password">Otto</td>
-          <td data-label="Access Type">Otto</td>
-          <td data-label="Status">Otto</td>
-          <td data-label="Created By">@mdo</td>
-          <td data-label="Created Date">Otto</td>
-        </tr>
-        <tr>
-          <td data-label="ID">1</td>
-          <td data-label="Fullname">Mark</td>
-          <td data-label="Username">Otto</td>
-          <td data-label="Password">Otto</td>
-          <td data-label="Access Type">Otto</td>
-          <td data-label="Status">Otto</td>
-          <td data-label="Created By">@mdo</td>
-          <td data-label="Created Date">Otto</td>
-        </tr>
-        <tr>
-          <td data-label="ID">1</td>
-          <td data-label="Fullname">Mark</td>
-          <td data-label="Username">Otto</td>
-          <td data-label="Password">Otto</td>
-          <td data-label="Access Type">Otto</td>
-          <td data-label="Status">Otto</td>
-          <td data-label="Created By">@mdo</td>
-          <td data-label="Created Date">Otto</td>
-        </tr>
-      </tbody>
+       
+      </tbody>   
     </table>
   </div>
-</div>
+</div>      
