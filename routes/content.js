@@ -40,7 +40,7 @@ router.post("/save", (req, res) => {
     const { categoryid, subcategoryid, userid, content, description, status, createdBy, createdDate } = contentData;
 
     
-    let sql = `INSERT INTO content (categoryId, sub_categoryId, user_Id, contentId, status, createdBy, createdDate, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    let sql = `INSERT INTO content (categoryId, sub_categoryId, user_Id, content_Id, status, createdBy, createdDate, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
     let values = [categoryid, subcategoryid, userid, content, status, createdBy, createdDate, description];
 
@@ -124,6 +124,35 @@ router.delete("/delete/:id", (req, res) => {
   }
 });
 
+router.put('/editstatus/:contentId/status', async (req, res) => {
+  try {
+      const contentId = req.params.contentId;
+      const newStatus = req.body.NewStatus;
+
+      if (!newStatus || !contentId) {
+          return res.status(400).json({ error: 'Invalid request parameters' });
+      }
+
+      // SQL query and values
+      let sql = `UPDATE content SET status = ? WHERE ID = ?`;
+      let values = [newStatus, contentId];
+
+      // Execute the update
+      edit(sql, values, (error, result) => {
+          if (error) {
+              console.error(error);
+              return res.status(500).json({ error: 'Database error' });
+          }
+          if (result.affectedRows === 0) {
+              return res.status(404).json({ error: 'Content not found or not updated' });
+          }
+          res.status(200).json({ message: 'Content status updated successfully' });
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 

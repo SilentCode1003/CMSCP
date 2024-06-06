@@ -2,20 +2,33 @@
 $(document).ready(function () {
   LoadTable();
   let contentId = '';
-  
+    $("#searchtable").on("input", function () {
+        filterTableRows("#datatable", 9, "#searchtable");
+    });
 
   $("#datatable").on('click', '.status-btn', function () {
-    var rowData = $(this).closest('tr').find('td').map(function () {
-        return $(this).text();
-    }).get();
-    var statusCell = $(this).closest('tr').find('td:eq(5)'); 
-    var status = statusCell.text(); 
-    var newStatus = status === "Active" ? "Inactive" : "Active";
-    statusCell.text(newStatus); 
- 
-    var icon = newStatus === "Active" ? "fas fa-eye" : "far fa-eye-slash";
-    $(this).find('i').removeClass().addClass(icon); 
-});
+        var contentId = $(this).data('id');
+        var currentStatus = $(this).data('new-status');
+        var newStatus = currentStatus === "Active" ? "Inactive" : "Active";
+
+        // Update the button data and icon
+        $(this).data('new-status', newStatus);
+        var icon = newStatus === "Active" ? "fas fa-eye" : "far fa-eye-slash";
+        $(this).find('i').removeClass().addClass(icon);
+
+        // Update the status cell in the table
+        var statusCell = $(this).closest('tr').find('td:eq(7) span');
+        statusCell.text(newStatus);
+        statusCell.removeClass("active-status inactive-status");
+        if (newStatus === "Active") {
+            statusCell.addClass("active-status");
+        } else {
+            statusCell.addClass("inactive-status");
+        }
+
+        // Update the database with the new status
+        updateContentStatus(contentId, newStatus);
+    });
 $("#datatable").on('click', 'tr', function(){
         var dataRow = [];
         $(this).closest('tr').find('td').each(function(){
@@ -48,15 +61,17 @@ $("#datatable").on('click', 'tr', function(){
                   var data = json.data;
                   console.log(data);
                   $.each(data, (key, item) => {
+                    var statusClass = item.status === "Active" ? "active-status" : "inactive-status";
                       finalData.push({
                           ID: item.ID,
                           categoryId: item.categoryId,
                           sub_categoryId: item.sub_categoryId,
                           user_Id: item.user_Id,
-                          contentId: item.contentId,
+                          content_Id: item.content_Id,
                           status: item.status,
                           createdBy: item.createdBy,
-                          createdDate: new Date(item.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                          createdDate: new Date(item.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
+                          status: `<span class="${statusClass}">${item.status}</span>`,
                           action: `
                               <button class="edit-btn" data-id="${item.ID}" data-toggle="modal" data-target="#staticmodalupdate">
                                   <i class="fas fa-edit"></i>
@@ -64,9 +79,9 @@ $("#datatable").on('click', 'tr', function(){
                               <button class="delete-btn" data-id="${item.ID}">
                                   <i class="fas fa-trash-alt"></i> 
                               </button>
-                              <button class="status-btn">
-                                <i class="fas fa-eye"></i>
-                              </button>
+                              <button class="status-btn" data-id="${item.ID}" data-new-status="${item.status === 'Active' ? 'Inactive' : 'Active'}">
+                                    <i class="${item.status === 'Active' ? 'fas fa-eye' : 'far fa-eye-slash'}"></i>
+                                </button>
                           `,
                       });
                   });
@@ -84,10 +99,10 @@ $("#datatable").on('click', 'tr', function(){
               { data: "categoryId" },
               { data: "sub_categoryId" },
               { data: "user_Id" },
-              { data: "contentId" },
-              { data: "status" },
+              { data: "content_Id" },
               { data: "createdBy" },
               { data: "createdDate" },
+              { data: "status" },
               { data: "action" },
           ],
           initComplete: function () {
@@ -148,6 +163,24 @@ $("#datatable").on('click', 'tr', function(){
     });
 });
 
+function updateContentStatus(contentId, newStatus) {
+    $.ajax({
+        url: `/content/editstatus/${contentId}/status`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({ NewStatus: newStatus }),
+        success: function(response) {
+            if (response.message === "Content status updated successfully") {
+                console.log("Okay na pre!!");
+            } else {
+                console.error("Failed to update status");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error updating status:", error);
+        }
+    });
+}
 $("#update-button").on("click", function () {
     var categoryid = $("#categoryidupd").val();
     var subcategoryid = $("#subcategoryidupd").val();

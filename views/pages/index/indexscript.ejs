@@ -1,0 +1,60 @@
+<script>
+   $(document).ready(function () {
+        $('#login').click(function () {
+            var username = $('#username').val();
+            var password = $('#password').val();
+
+            // Check if username or password is empty
+            if (username.trim() === '' || password.trim() === '') {
+                Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Check your username and password!",
+                    showConfirmButton: true
+                });
+                return;
+            }
+
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                data: {
+                    username: username,
+                    password: password
+                },
+                success: function (response) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Login Successful!",
+                        showConfirmButton: true,
+                        timer: 1500
+                    }).then((result) => {
+                        if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+                            window.location.href = '/user';
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = "Login failed";
+                    if (xhr.status === 400) {
+                        errorMessage = xhr.responseJSON.msg;
+                    }
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: errorMessage,
+                        showConfirmButton: true
+                    });
+                }
+            });
+        });
+
+        $('#togglePassword').click(function () {
+            var passwordField = $('#password')[0]; 
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            $(this).toggleClass('fa-eye-slash');
+        });
+    });
+</script>

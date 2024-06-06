@@ -11,7 +11,7 @@ module.exports = router;
 
 router.get("/load", (req, res) => {
   try {
-    let sql = "SELECT * FROM users";
+    let sql = "SELECT * FROM mediacontent";
 
     Select(sql, (err, result) => {
       if (err) {

@@ -110,10 +110,10 @@
     </h3>
     <!-- Button trigger modal -->
 
-    <div class="row ">
+    <div class="row">
       <div class="col-6">
-        <input type="text" class="w-50" id="search" placeholder="Search for...">
-      </div>
+        <input type="text" class="w-50" id="searchtable" placeholder="Search for...">
+    </div>
       <div class="col-6 pl-5 text-right">
         <button type="button" id="addbtn" class="btn addbtn" data-bs-toggle="modal"
           data-bs-target="#staticBackdrop">
@@ -125,7 +125,7 @@
 
   <div class="card-body content-card-body">
 
-    <table class="table table-light table-striped table-hover"  id="datatable"name="datatable">
+    <table class="table table-light table-hover"  id="datatable"name="datatable">
       <thead class="table-content contents">
         <tr>
           <th scope="col">ID</th>
@@ -133,10 +133,10 @@
           <th scope="col">Sub-Category ID</th>
           <th scope="col">User ID</th>
           <th scope="col">Content</th>
-          <th scope="col">Status</th>
           <th scope="col">Created By</th>
           <th scope="col">Created Date</th>
-          <th scope="col">Action</th>
+          <th class="status-width">Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>

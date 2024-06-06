@@ -5,29 +5,60 @@
         let categoryId = '';
 
 
-        $("#datatable").on('click', '.status-btn', function () {
-    var rowData = $(this).closest('tr').find('td').map(function () {
-        return $(this).text();
-    }).get();
-    var statusCell = $(this).closest('tr').find('td:eq(2)');
-    var status = statusCell.text();
-    var newStatus = status === "Active" ? "Inactive" : "Active";
-    statusCell.text(newStatus);
+    $("#search").on("input", function () {
+        filterTableRows("#datatable", 9, "#search");
+    });
 
-    statusCell.removeClass("active-status inactive-status");
-    if (newStatus === "Active") {
-        statusCell.addClass("active-status");
-    } else {
-        statusCell.addClass("inactive-status");
+    function searchAndSortTable(searchText) {
+        var table = $('#datatable').DataTable();
+        var found = false;
+        table.rows().every(function (index) {
+            var row = this.data();
+            var name = row.c_name.toLowerCase();
+            var id = row.c_id && row.c_id.toString().toLowerCase(); 
+            var status = row.c_status.toLowerCase();
+            
+            if (name.includes(searchText) || (id && id.includes(searchText)) || status.includes(searchText)) {
+                found = true;
+                // Remove matched row if it exists
+                var rowNode = this.node();
+                if (rowNode && rowNode.parentNode) {
+                    rowNode.parentNode.removeChild(rowNode);
+                    // Re-insert row at the top
+                    var newRowNode = table.row.add(row).node();
+                    $(newRowNode).prependTo(table.table().body()).show(); // Show the row at the top
+                }
+            }
+        });
+        // If no match found, reset the table order
+        if (!found || searchText === "") {
+        table.order([0, 'asc']).draw();
+    }
     }
 
-    var icon = newStatus === "Active" ? "fas fa-eye" : "far fa-eye-slash";
-    $(this).find('i').removeClass().addClass(icon);
-});
+        $("#datatable").on('click', '.status-btn', function () {
+        var categoryId = $(this).data('id');
+        var currentStatus = $(this).data('new-status');
+        var newStatus = currentStatus === "Active" ? "Inactive" : "Active";
 
-        
+        // Update the button data and icon
+        $(this).data('new-status', newStatus);
+        var icon = newStatus === "Active" ? "fas fa-eye" : "far fa-eye-slash";
+        $(this).find('i').removeClass().addClass(icon);
 
+        // Update the status cell in the table
+        var statusCell = $(this).closest('tr').find('td:eq(4) span');
+        statusCell.text(newStatus);
+        statusCell.removeClass("active-status inactive-status");
+        if (newStatus === "Active") {
+            statusCell.addClass("active-status");
+        } else {
+            statusCell.addClass("inactive-status");
+        }
 
+        // Update the database with the new status
+        updateCategoryStatus(categoryId, newStatus);
+    });
 
         $("#datatable").on('click', 'tr', function () {
             var dataRow = [];
@@ -58,12 +89,14 @@ function LoadTable() {
                         var data = json.data;
                         // console.log(data);
                         $.each(data, (key, item) => {
-                        finalData.push({
+                           
+                         var statusClass = item.c_status === "Active" ? "active-status" : "inactive-status"; 
+                         finalData.push({
                           c_id: item.c_id,
                           c_name: item.c_name,
-                          c_status: item.c_status,
                           c_createdBy: item.c_createdBy,
-                          c_createdDate: new Date(item.c_createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                          c_createdDate: new Date(item.c_createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
+                          c_status: `<span class="${statusClass}">${item.c_status}</span>`,
                           action: `
                               <button class="edit-btn" data-id="${item.c_id}" data-toggle="modal" data-target="#staticmodalupdate">
                                   <i class="fas fa-edit"></i>
@@ -71,9 +104,11 @@ function LoadTable() {
                               <button class="delete-btn" data-id="${item.c_id}">
                                   <i class="fas fa-trash-alt"></i> 
                               </button>
-                              <button class="status-btn">
-                                  <i class="fas fa-eye"></i>
-                              </button>
+                              <button class="status-btn" data-id="${item.c_id}" data-new-status="${item.c_status === 'Active' ? 'Inactive' : 'Active'}">
+                                    <i class="${item.c_status === 'Active' ? 'fas fa-eye' : 'far fa-eye-slash'}"></i>
+                                </button>
+
+
                           `,
                       });
                         });
@@ -89,9 +124,9 @@ function LoadTable() {
                 columns: [
                     { data: "c_id" },
                     { data: "c_name" },
-                    { data: "c_status" },
                     { data: "c_createdBy" },
                     { data: "c_createdDate" },
+                    { data: "c_status" },
                     { data: "action" },
                 ],
                 initComplete: function () {
@@ -102,44 +137,114 @@ function LoadTable() {
 
         }
     })
-$("#save-button").on("click", function () {
-        let c_name = $("#name").val();
-        let c_status = "Active";
-        let c_createdBy = "Admin";
-        let c_createdDate = new Date().toISOString();
+    $("#save-button").on("click", function () {
+    let c_name = $("#name").val();
+    let c_status = "Active";
+    let c_createdBy = "Admin";
+    let c_createdDate = new Date().toISOString();
 
-
-        $.ajax({
-            url: "/category/save",
-            method: "POST",
-            data: {
-                c_name: c_name,
-                c_status: c_status,
-                c_createdBy: c_createdBy,
-                c_createdDate: c_createdDate,
-            },
-            success: function (response) {
-                if (response && response.msg === "success") {
-                    $("#c_name").val("");
-                    $("#staticmodal").modal("hide");
-                    $('#datatable').DataTable().ajax.reload();
-                    Swal.fire({
-                            position: "top-center",
-                            icon: "success",
-                            title: "Data saved successfully!",
-                            showConfirmButton: false,
-                            timer: 1500
-                            });
-        } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error saving data. Please try again.',
-                    });
-                }
-            }
+  
+    var table = $('#datatable').DataTable();
+    var names = table.column(1).data().toArray(); 
+    if (names.includes(c_name)) {
+       
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Name already exists.',
         });
+        return; 
+    }
+
+   
+    $.ajax({
+        url: "/category/save",
+        method: "POST",
+        data: {
+            c_name: c_name,
+            c_status: c_status,
+            c_createdBy: c_createdBy,
+            c_createdDate: c_createdDate,
+        },
+        success: function (response) {
+            if (response && response.msg === "success") {
+                $("#c_name").val("");
+                $("#staticmodal").modal("hide");
+                $('#datatable').DataTable().ajax.reload();
+                Swal.fire({
+                    position: "top-center",
+                    icon: "success",
+                    title: "Data saved successfully!",
+                    showConfirmButton: true,
+                    timer: 1500
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error saving data. Please try again.',
+                });
+            }
+        }
     });
+});
+function updateCategoryStatus(categoryId, newStatus) {
+    $.ajax({
+        url: `/category/editstatus/${categoryId}/status`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({ NewStatus: newStatus }),
+        success: function(response) {
+            if (response.message === "Category status updated successfully") {
+                console.log("Okay na pre!!");
+            } else {
+                console.error("Failed to update status");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error updating status:", error);
+        }
+    });
+}
+
+// $("#save-button").on("click", function () {
+//         let c_name = $("#name").val();
+//         let c_status = "Active";
+//         let c_createdBy = "Admin";
+//         let c_createdDate = new Date().toISOString();
+
+
+//         $.ajax({
+//             url: "/category/save",
+//             method: "POST",
+//             data: {
+//                 c_name: c_name,
+//                 c_status: c_status,
+//                 c_createdBy: c_createdBy,
+//                 c_createdDate: c_createdDate,
+//             },
+//             success: function (response) {
+//                 if (response && response.msg === "success") {
+//                     $("#c_name").val("");
+//                     $("#staticmodal").modal("hide");
+//                     $('#datatable').DataTable().ajax.reload();
+//                     Swal.fire({
+//                             position: "top-center",
+//                             icon: "success",
+//                             title: "Data saved successfully!",
+//                             showConfirmButton: true,
+//                             timer: 1500
+//                             });
+//         } else {
+//                     Swal.fire({
+//                         icon: 'error',
+//                         title: 'Error',
+//                         text: 'Error saving data. Please try again.',
+//                     });
+//                 }
+//             }
+//         });
+//     });
          $(document).on("click", ".edit-btn", function () {
             categoryId = $(this).data("id"); 
             $("#categoryId").val(categoryId);
@@ -151,6 +256,18 @@ $("#save-button").on("click", function () {
             let c_status = "Active";
             let c_createdBy = "Admin";
             let c_createdDate = new Date().toISOString();
+
+            var table = $('#datatable').DataTable();
+            var names = table.column(1).data().toArray(); 
+            if (names.includes(c_name)) {
+            
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Name already exists.',
+                });
+                return; 
+            }
 
             Swal.fire({
                 title: "Do you want to save the changes?",
@@ -222,6 +339,11 @@ function handleDeleteButtonClick() {
             });
         });
     }
+    $('.status-btn').on('click', function() {
+                const categoryId = $(this).data('id');
+                const newStatus = $(this).data('new-status');
+                updateCategoryStatus(categoryId, newStatus);
+            });
     $(document).on("click", "#addbtn", function () {
          console.log("triggered")
         $("#staticmodal").modal("show");

@@ -8,6 +8,9 @@
   td,
   tr {
     display: block;
+    font-family: "Share Tech", sans-serif;
+    font-weight: 300;
+    font-style: normal;
   }
 
   thead tr {
@@ -15,9 +18,9 @@
     top: -9999px;
     left: -9999px;
   }
-
   tr {
     border: 1px solid #ccc;
+
   }
 
   td {
@@ -29,13 +32,16 @@
 
   td:before {
     position: absolute;
-    top: 6px;
-    left: 6px;
+    top: 5px;
+    left: 5px;
     width: 45%;
     padding-right: 10px;
     white-space: nowrap;
     content: attr(data-label);
-    font-weight: bold;
+ 
+   
+
+    
   }
   .addbtn, 
   .saveBtn{
@@ -79,6 +85,16 @@
 }
 
 /* sticky footer */
+.sticky-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f8f9fa; 
+  padding: 1px 0; 
+  text-align: center;
+}
+
+
 
 
 .addbtn, 
@@ -109,6 +125,7 @@
 
 .table tbody{
   background-color: transparent;
+  
 }
 
 .table{
@@ -158,4 +175,49 @@
   position: fixed;
   z-index: 5;
 }
+.status-width {
+  width: 70px; 
+}
+.active-status, .inactive-status {
+  opacity: 0.7; 
+  border-radius: 6px;  
+  line-height: 0.6rem; 
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.65rem;
+  width: 5rem;
+}
 
+.active-status {
+  background-color: #A3EBB1;
+  color: #18A558;
+  margin-bottom: 0.3rem;
+
+  
+}
+
+.inactive-status {
+  background-color: rgba(251, 29, 29, 0.5); 
+  color: rgb(251, 29, 29);
+  margin-bottom: 0.3rem;
+  
+  
+}
+input[type="text"].w-50 {
+  width: 50%;
+  padding: 0.4rem;
+  padding-right: 40px;
+  border: 1px solid #14274E;
+  border-radius: 6px;
+  font-size: 14px;
+}
+#togglePassword,#togglePasswordupd {
+  right: 25px;
+  top: 18%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.position-absulote {
+  position: absolute;
+}

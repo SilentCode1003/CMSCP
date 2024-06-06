@@ -1,15 +1,14 @@
 <script>
 $(document).ready(function () {
   LoadTable();
-  var categoryId;
-//   let categoryId = '';
+  //let subcategoryId = '';
 
  
   $("#datatable").on('click', '.status-btn', function () {
     var rowData = $(this).closest('tr').find('td').map(function () {
         return $(this).text();
     }).get();
-    var statusCell = $(this).closest('tr').find('td:eq(2)'); 
+    var statusCell = $(this).closest('tr').find('td:eq(5)'); 
     var status = statusCell.text(); 
     var newStatus = status === "Active" ? "Inactive" : "Active";
     statusCell.text(newStatus); 
@@ -23,9 +22,9 @@ $("#datatable").on('click', 'tr', function(){
           dataRow.push($(this).text());
         });
         console.log(dataRow)
-        categoryId = dataRow[0];
+        SourceBuffer = dataRow[0];
 
-      console.log("categoryID:", categoryId)
+      console.log("subcategory:", subcategoryId)
       
 
       });
@@ -43,28 +42,29 @@ $("#datatable").on('click', 'tr', function(){
           serverMethod: "GET",
           ajax: {
               url: "/subcategory/load",
-              dataSrc: (json) => {
+              dataSrc: (json) => { 
                   var finalData = [];
                   var data = json.data;
                   console.log(data);
                   $.each(data, (key, item) => {
+                    var statusClass = item.sc_status === "Active" ? "active-status" : "inactive-status";
                       finalData.push({
-                          ID: item.ID,
-                          categoryId:categoryId,
-                          name: item.name,
-                          status: item.status,
-                          createdBy: item.createdBy,
-                          createdDate: new Date(item.createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                          sc_id: item.sc_id,
+                          sc_categoryid: item.sc_categoryid,
+                          sc_name: item.sc_name,
+                          sc_createdBy: item.sc_createdBy,
+                          sc_createdDate: new Date(item.sc_createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
+                          sc_status: `<span class="${statusClass}">${item.sc_status}</span>`,
                           action: `
-                              <button class="edit-btn" data-id="${item.ID}" data-toggle="modal" data-target="#staticmodalupdate">
+                              <button class="edit-btn" data-id="${item.sc_id}" data-toggle="modal" data-target="#staticmodalupdate">
                                   <i class="fas fa-edit"></i>
                               </button>
-                              <button class="delete-btn" data-id="${item.ID}">
+                              <button class="delete-btn" data-id="${item.sc_id}">
                                   <i class="fas fa-trash-alt"></i> 
                               </button>
-                              <button class="status-btn">
-                                  <i class="fas fa-eye"></i>
-                              </button>
+                              <button class="status-btn" data-id="${item.sc_id}" data-new-status="${item.status === 'Active' ? 'Inactive' : 'Active'}">
+                                    <i class="${item.sc_status === 'Active' ? 'fas fa-eye' : 'far fa-eye-slash'}"></i>
+                                </button>
                           `,
                       });
                   });
@@ -78,12 +78,12 @@ $("#datatable").on('click', 'tr', function(){
               },
           ],
           columns: [
-              { data: "ID" },
-              { data: "categoryId" },
-              { data: "name" },
-              { data: "status" },
-              { data: "createdBy" },
-              { data: "createdDate" },
+              { data: "sc_id" },
+              { data: "sc_categoryid" },
+              { data: "sc_name" },
+              { data: "sc_createdBy" },
+              { data: "sc_createdDate" },
+              { data: "sc_status" },
               { data: "action" },
           ],
           initComplete: function () {

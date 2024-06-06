@@ -62,7 +62,7 @@
                           cs_username: item.cs_username,
                           cs_password: item.cs_password,
                           cs_createdby: item.cs_createdby,
-                          cs_createddate: new Date(item.cs_createddate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                          cs_createddate: new Date(item.cs_createddate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
                           cs_status: item.cs_status,
                           action: `
                               <button class="edit-btn" data-id="${item.cs_id}" data-toggle="modal" data-target="#staticmodalupdate">
