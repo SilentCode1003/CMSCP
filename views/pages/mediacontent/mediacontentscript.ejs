@@ -1,6 +1,79 @@
 <script>
-    loadDataTable();
-    
+    $(document).ready(function () {
+        LoadTable();
+        function LoadTable() {
+             console.log("Gumagana idok!!");
+
+            $("#datatable").DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                paging: false,
+                searching: false,
+                info: false,
+                scrollY: 400,
+                scrollCollapse: true,
+                serverMethod: "GET",
+                ajax: {
+                    url: "/mediacontent/load",
+                    dataSrc: (json) => {
+                        var finalData = [];
+                        var data = json.data;
+                         console.log(data);
+                        $.each(data, (key, item) => {
+                            var statusClass = item.m_status === "Active" ? "active-status" : "inactive-status";
+                            finalData.push({
+                                m_id: item.m_id,
+                                m_content: item.m_content,
+                                m_media: item.m_media,
+                                m_createdBy: item.m_createdBy,
+                                m_createdDate: new Date(item.m_createdDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
+                                m_status: `<span class="${statusClass}">${item.m_status}</span>`,
+                                action: `
+                                      <button class="edit-btn" data-id="${item.m_id}" data-toggle="modal" data-target="#staticmodalupdate">
+                                      <i class="fas fa-edit"></i>
+                                      </button>
+
+  
+                                      <button class="delete-btn" data-id="${item.m_id}">
+                                      <i class="fas fa-trash-alt"></i> 
+                                      </button>
+                                      <button class="status-btn" data-id="${item.m_id}" data-new-status="${item.m_status === 'Active' ? 'Inactive' : 'Active'}">
+                                    <i class="${item.status === 'Active' ? 'fas fa-eye' : 'far fa-eye-slash'}"></i>
+                                </button>
+
+                            `,
+                            });
+
+
+                        });
+
+                        return finalData;
+                    },
+                },
+                columnDefs: [
+                    {
+                        targets: 1,
+                        className: "td-indent",
+                    },
+                ],
+                columns: [
+                    { data: "m_id" },
+                    { data: "m_content" },
+                    { data: "m_media" },
+                    //{ data: "password" },
+                    { data: "m_createdBy" },
+                    { data: "m_createdDate" },
+                    { data: "m_status" },
+                    { data: "action" },
+                ],
+                initComplete: function () {
+                    // console.log("init complete");
+                    // hideload();
+                },
+            });
+        }
+    })
     $(document).on("click", "#addbtn", function () {
         // console.log("triggered")
         $("#staticmodal").modal("show");
@@ -16,49 +89,47 @@
         $("#staticmodal").modal("hide");
     })
     
-    function displayData(data){
-        const tableBody = $("#sample-table tbody");
-        tableBody.empty();
+    // function displayData(data){
+    //     const tableBody = $("#datatable");
+    //     tableBody.empty();
 
-        if (data.length != 0){
-            data.forEach((row) => {
-                const {ID, fullname, username, accessType, status, createdBy, createdDate } = row;
-                const action = `<button class="btn btn-outline-primary" id="edit-btn">Edit</button>`
+    //     if (data.length != 0){
+    //         data.forEach((row) => {
+    //             const {ID, ContentID, Media, CreatedBy, CreatedDate, Status } = row;
+            
 
-                const tr = $('<tr>').append(
-                    $('<td>', { text: ID}),
-                    $('<td>', { text: fullname}),
-                    $('<td>', { text: username}),
-                    $('<td>', { text: accessType}),
-                    $('<td>', { text: status}),
-                    $('<td>', { text: createdBy}),
-                    $('<td>', { text: createdDate}),
-                    $('<td>', { html: action}),
-                );
+    //             const tr = $('<tr>').append(
+    //                 $('<td>', { text: ID}),
+    //                 $('<td>', { text: ContentID}),
+    //                 $('<td>', { text: Media}),
+    //                 $('<td>', { text: CreatedBy}),
+    //                 $('<td>', { text: CreatedDate}),
+    //                 $('<td>', { text: Status}),
+    //             );
 
-                tableBody.append(tr);
-            })
-        }else{
-            info("No Data", "Please pass a data to display the table. Thank you UwU <3 :3");
-        }
-    }
+    //             tableBody.append(tr);
+    //         })
+    //     }else{
+    //         info("No Data", "Please pass a data to display the table. Thank you UwU <3 :3");
+    //     }
+    // }
 
-    function info(title, message){
-        Swal.fire({
-            title: `${title}`,
-            text: `${message}`,
-            icon: "question"
-        });
-    }
+    // function info(title, message){
+    //     Swal.fire({
+    //         title: `${title}`,
+    //         text: `${message}`,
+    //         icon: "question"
+    //     });
+    // }
 
-    function loadDataTable() {
-        $.ajax({
-            url: "/mediacontent/load",
-            method: "GET",
-            success: function (result) {
-                let data = result.data;
-                displayData(data);
-            }
-        });
-    }
+    // function loadDataTable() {
+    //     $.ajax({
+    //         url: "/mediacontent/load",
+    //         method: "GET",
+    //         success: function (result) {
+    //             let data = result.data;
+    //             displayData(data);
+    //         }
+    //     });
+    // }
 </script>

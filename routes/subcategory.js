@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('subcategorylayout', { title: 'Express' });
-});
-
 var express = require('express');
 var router = express.Router();
 
@@ -17,7 +12,7 @@ router.get('/', function(req, res, next) {
 });
 router.get("/load", (req, res) => {
   try {
-    let sql = "SELECT * FROM category";
+    let sql = "SELECT * FROM subcategory";
 
     Select(sql, (err, result) => {
       if (err) {

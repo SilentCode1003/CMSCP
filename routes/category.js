@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { Select, Insert, edit, deleteUser} = require("./repository/database");
+const { Select, Insert, edit, deleteUser,editstatus} = require("./repository/database");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -51,36 +51,39 @@ router.post("/save", (req, res) => {
   }
 });
 
-router.put("/edit", async (req, res) => { 
+router.put("/edit", async (req, res) => {
   try {
-    const {categoryId, c_name, c_status, c_createdBy, c_createdDate } = req.body; 
-    
-     console.log("Received Id:",categoryId); 
-    console.log("Received data:", { categoryId,c_name, c_status, c_createdBy, c_createdDate });
+    const { categoryId, c_name, c_status, c_createdBy, c_createdDate } = req.body;
 
-  
-    let sql =`UPDATE category SET c_name=?, c_status=?, c_createdBy=?, c_createdDate=? WHERE c_id=?`;
+    console.log("Received Id:", categoryId);
+    console.log("Received data:", { categoryId, c_name, c_status, c_createdBy, c_createdDate });
 
-    let values = [c_name, c_status, c_createdBy, c_createdDate, categoryId]; 
+    let sql = `UPDATE category SET c_name=?, c_status=?, c_createdBy=?, c_createdDate=? WHERE c_id=?`;
 
-    
+    let values = [c_name, c_status, c_createdBy, c_createdDate, categoryId];
+
     edit(sql, values, (error, result) => {
       if (error) {
+        console.error(error.message);
         return res.status(500).json({ error: "Database error" });
       }
       if (!result || result.affectedRows === 0) {
-        return res.status(404).json({ error: "User not found or not updated" });
+        return res.status(404).json({ error: "Category not found or not updated" });
       }
-      
+
       console.log(`Updated Rows: ${result.affectedRows}`);
 
-      res.json({ msg: "success", data: { categoryId, c_name, c_status, c_createdBy, c_createdDate,} }); 
+      res.json({
+        msg: "success",
+        data: { categoryId, c_name, c_status, c_createdBy, c_createdDate },
+      });
     });
   } catch (error) {
     console.error("Internal server error:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 router.delete("/delete/:id", (req, res) => {
   try {
@@ -110,6 +113,36 @@ router.delete("/delete/:id", (req, res) => {
     console.error(error.message);
    
     res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+router.put('/editstatus/:categoryId/status', async (req, res) => {
+  try {
+      const categoryId = req.params.categoryId;
+      const newStatus = req.body.NewStatus;
+
+      if (!newStatus || !categoryId) {
+          return res.status(400).json({ error: 'Invalid request parameters' });
+      }
+
+      // SQL query and values
+      let sql = `UPDATE category SET c_status = ? WHERE c_id = ?`;
+      let values = [newStatus, categoryId];
+
+      // Execute the update
+      edit(sql, values, (error, result) => {
+          if (error) {
+              console.error(error);
+              return res.status(500).json({ error: 'Database error' });
+          }
+          if (result.affectedRows === 0) {
+              return res.status(404).json({ error: 'Category not found or not updated' });
+          }
+          res.status(200).json({ message: 'Category status updated successfully' });
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
   }
 });
 

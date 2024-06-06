@@ -1,0 +1,44 @@
+@media (max-width: 767.98px) {
+  .gradient-custom-2 {
+    display: none;
+  }
+}
+.body{
+  margin-top: 6rem;
+  position: center;
+}
+.card-body{
+  /* box-shadow: #14274E .1rem .1rem 1rem 1rem ; */
+  font-family: "Share Tech", sans-serif;
+  font-weight: 400;
+  font-style: bold;
+  /* border-left: solid 2px; */
+  /* border-top: solid 2px;
+  border-bottom: solid 2px; */ 
+  
+}
+
+.h-100 {
+  height: 80vh !important;
+}
+.card {
+  border-radius: 1rem;
+}
+
+.gradient-custom-2 {
+  background: #14274E;
+}
+.btn-login {
+  background-color: #14274E;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 0.2rem;
+}
+
+.btn-create {
+  background-color: #14274E;
+  color: white;
+  padding: .3rem .8rem;
+  border-radius: 0.2rem;
+  margin-left: 9rem;
+}

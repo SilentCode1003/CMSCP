@@ -66,3 +66,23 @@ exports.deleteUser = (sql, data, callback) => {
     
   }
 };
+exports.editstatus = (sql, data, callback) => {
+  connection.query(sql, data, (error, results, fields) => {
+    if (error) {
+      console.error(error.message);
+      return callback(error, null);
+    }
+    console.log('Rows affected:', results.affectedRows);
+    callback(null, results);
+  });
+};
+exports.Query = (sql, values) => {
+  return new Promise((resolve, reject) => {
+      connection.query(sql, values, (error, results) => {
+          if (error) {
+              return reject(error);
+          }
+          resolve(results);
+      });
+  });
+};

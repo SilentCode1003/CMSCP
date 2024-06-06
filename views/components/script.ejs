@@ -13,5 +13,53 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
+<script>
+    function filterTableRows(tablename, colcount, searchid) {
+        console.log("triggered search");
 
-->
+        const searchQuery = $(searchid).val().trim().toLowerCase();
+        let foundMatches = false;
+
+        $("#no-match-row").remove();
+
+        $(tablename + " tbody tr").each(function () {
+            const rowData = $(this).text().toLowerCase();
+            if (rowData.includes(searchQuery)) {
+                $(this).show();
+                foundMatches = true;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        if (!foundMatches) {
+            const noMatchRow = $("<tr>").append(
+                $("<td>", {
+                    colspan: colcount,
+                    class: "text-center",
+                    text: "No Data Matched",
+                })
+            );
+            $(tablename + " tbody").append(noMatchRow);
+            noMatchRow.attr("id", "no-match-row");
+        }
+    }  
+      
+    document.getElementById('logout').addEventListener('click', function(event) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will be logged out of the application!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log me out!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'http://localhost:5000';
+            }
+        });
+    });
+  
+</script>
